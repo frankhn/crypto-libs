@@ -18,7 +18,7 @@
     "big-integer": "^1.6.51",
     "bip32": "^3.1.0",
     "bip39": "^3.0.4",
-    "bitcoinjs-lib": "https://gitlab.com/autonomous-investments/flip-app/bitcoinjs-lib",
+    "bitcoinjs-lib": "https://github.com/frankhn/bitcoinjs-lib.git",
     "bs58": "^5.0.0",
     "ethereumjs-wallet": "^1.0.2",
     "npm": "^9.3.1",
