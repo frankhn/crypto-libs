@@ -1,7 +1,6 @@
 import {isWif, fromWif, toAddress} from "./dingo";
 import {isWif as isWifBtc, fromWif as fromBtcWif, getP2wpkhAddressFromPublicKey} from "./bitcoin";
 import * as Bip39 from "bip39";
-import { hdkey } from "ethereumjs-wallet";
 
 import {getPublicKeyFromPrivateKey} from "./shared";
 
@@ -114,15 +113,15 @@ export function createAddresses(key: string) {
     return createAddressesFromPrivateKey(privateKey);
 }
 
-export function createBip32NodeFromTwelveWords  (mnemonics: string, currency:string):hdkey {
+export function createBip32NodeFromTwelveWords  (mnemonics: string, currency:string) {
     const seed =  Bip39.mnemonicToSeedSync(mnemonics);
-    const hdNode = hdkey.fromMasterSeed(seed);
+    // const hdNode = hdkey.fromMasterSeed(seed);
 
-    if (currency === 'BTC') {
-        return hdNode.derivePath("m/84'/0'/0'/0/0")
-    } else {
-        return hdNode.derivePath("m/44'/3'/0'/0/0");
-    }
+    // if (currency === 'BTC') {
+    //     return hdNode.derivePath("m/84'/0'/0'/0/0")
+    // } else {
+    //     return hdNode.derivePath("m/44'/3'/0'/0/0");
+    // }
 };
 
 export function createAddressesFrom12Words(twelveWords) {

@@ -20,7 +20,6 @@
     "bip39": "^3.0.4",
     "bitcoinjs-lib": "https://github.com/frankhn/bitcoinjs-lib.git",
     "bs58": "^5.0.0",
-    "ethereumjs-wallet": "^1.0.2",
     "npm": "^9.3.1",
     "ripemd160": "^2.0.2",
     "safe-buffer": "^5.2.1",
