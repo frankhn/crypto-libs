@@ -1,0 +1,26 @@
+stages:
+  - test
+  - deploy
+
+test:
+  image: node:latest
+  stage: test
+  before_script:
+    - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
+  script:
+    - npm i  & npm link
+    - npm install
+    - cd src/__tests__/
+    - npm link @autonomous-investments/flip-js-crypto-libs
+    - cd ../../
+    - npm test
+
+deploy:
+  image: node:latest
+  stage: deploy
+  script:
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
+    - npm publish
+  when: manual
+  only:
+    - main
