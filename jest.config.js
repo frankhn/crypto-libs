@@ -6,6 +6,7 @@ module.exports = {
     'js',
     'ts',
     'node',
+    'mts'
   ],
   coveragePathIgnorePatterns: [
     'node_modules',

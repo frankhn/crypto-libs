@@ -1,8 +1,9 @@
-import {isWif, fromWif, toAddress} from "./dingo";
-import {isWif as isWifBtc, fromWif as fromBtcWif, getP2wpkhAddressFromPublicKey} from "./bitcoin";
+import { isWif, fromWif, toAddress } from "./dingo";
+import { isWif as isWifBtc, fromWif as fromBtcWif, getP2wpkhAddressFromPublicKey } from "./bitcoin";
 import * as Bip39 from "bip39";
-
-import {getPublicKeyFromPrivateKey} from "./shared";
+import { hdkey } from "ethereumjs-wallet";
+import * as Bitcoin from 'react-native-bitcoinjs-lib'
+import { getPublicKeyFromPrivateKey } from "./shared";
 
 /**
  * Used for import of keys in flip, will try to determine which key type is imported. Will throw an error if unable to determine type of invalid input
@@ -45,7 +46,7 @@ export function determineKeyType(key) {
     }
 }
 
-export function getPrivateKeyFromSavedKey(savedKey:Buffer, currency:string):Buffer {
+export function getPrivateKeyFromSavedKey(savedKey: Buffer, currency: string): Buffer {
     const type = determineKeyType(savedKey);
 
     if (type.is12Words) {
@@ -113,15 +114,19 @@ export function createAddresses(key: string) {
     return createAddressesFromPrivateKey(privateKey);
 }
 
-export function createBip32NodeFromTwelveWords  (mnemonics: string, currency:string) {
-    const seed =  Bip39.mnemonicToSeedSync(mnemonics);
-    // const hdNode = hdkey.fromMasterSeed(seed);
+export function createBip32NodeFromTwelveWords(mnemonics: string, currency: string): hdkey {
+    const seed = Bip39.mnemonicToSeedSync(mnemonics);
+    // @ts-ignore
+    const hdNode = Bitcoin.HDNode.fromSeedBuffer(Buffer.from(seed, 'hex'));
 
-    // if (currency === 'BTC') {
-    //     return hdNode.derivePath("m/84'/0'/0'/0/0")
-    // } else {
-    //     return hdNode.derivePath("m/44'/3'/0'/0/0");
-    // }
+    // const hdNode = hdkey.fromMasterSeed(seed);
+    console.log(hdNode.derivePath("m/84'/0'/0'/0/0"), hdNode.derivePath("m/44'/3'/0'/0/0"), "createBip32NodeFromTwelveWords")
+
+    if (currency === 'BTC') {
+        return hdNode.derivePath("m/84'/0'/0'/0/0")
+    } else {
+        return hdNode.derivePath("m/44'/3'/0'/0/0");
+    }
 };
 
 export function createAddressesFrom12Words(twelveWords) {
