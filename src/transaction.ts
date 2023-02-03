@@ -7,6 +7,7 @@ import { script, Transaction } from "bitcoinjs-lib";
 import secp256k1 from "secp256k1";
 import { fromBech32 } from "bitcoinjs-lib/src/address";
 import { isBs58, isDogeOrDingo } from "./shared";
+// import {} from '@auto'
 
 const DUST_THRESHOLD = bi("1000");
 
