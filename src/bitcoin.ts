@@ -10,7 +10,6 @@ import { p2wpkh } from "bitcoinjs-lib/src/payments/index";
  * @returns {*}
  */
 export const getP2wpkhAddressFromPublicKey = ( publicKey:Buffer) => {
-
     return p2wpkh({ pubkey: publicKey }).address;
 }
 // { checkStringAgainstWhiteList, shared.isBs58 }

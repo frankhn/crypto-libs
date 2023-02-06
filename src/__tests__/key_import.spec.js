@@ -72,14 +72,14 @@ test('test prepare key for storage', () => {
 
 test('test createBip32NodeFromTwelveWords', () => {
     const result = createBip32NodeFromTwelveWords("shield tip flower sorry judge yard dilemma sure sunset pudding remember rubber", 'BTC')
-    console.log(result, "Response from the result")
+    // console.log(result, "Response from the result")
 })
 
 
-/*test('test address creation from 12 words', () => {
+test('test address creation from 12 words', () => {
    const input = 'shield tip flower sorry judge yard dilemma sure sunset pudding remember rubber';
    const addresses = createAddresses(input);
    expect(addresses.DINGO).toBe('D8bQ6PyxKqWQHeG9aesAt2YENJSWdgxWp1');
    expect(addresses.DOGE).toBe('D8bQ6PyxKqWQHeG9aesAt2YENJSWdgxWp1');
    expect(addresses.BTC).toBe('bc1q3ue4uawjvzmqkt4lfj4vnwvm9wl2dnl7jlq56r');
-});*/
+});
