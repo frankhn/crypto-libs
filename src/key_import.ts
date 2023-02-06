@@ -1,8 +1,8 @@
 import { isWif, fromWif, toAddress } from "./dingo";
 import { isWif as isWifBtc, fromWif as fromBtcWif, getP2wpkhAddressFromPublicKey } from "./bitcoin";
-import * as Bip39 from "bip39";
+import { validateMnemonic, mnemonicToSeedSync } from "bip39";
 import { hdkey } from "ethereumjs-wallet";
-import * as Bitcoin from 'react-native-bitcoinjs-lib'
+import { HDNode } from 'bitcoinjs3'
 import { getPublicKeyFromPrivateKey } from "./shared";
 
 /**
@@ -19,7 +19,7 @@ export function determineKeyType(key) {
     const length = key.split(" ").length;
 
     if (length === 12) {
-        if (Bip39.validateMnemonic(key) === false) {
+        if (validateMnemonic(key) === false) {
             throw new Error('Invalid 12 word phrase provided');
         }
         is_12_words = true;
@@ -50,7 +50,7 @@ export function getPrivateKeyFromSavedKey(savedKey: Buffer, currency: string): B
     const type = determineKeyType(savedKey);
 
     if (type.is12Words) {
-        return createBip32NodeFromTwelveWords(savedKey.toString(), currency).getWallet().getPrivateKey();
+        return createBip32NodeFromTwelveWords(savedKey.toString(), currency).privateKey;
     } else if (type.isBtcWif) {
         return fromBtcWif(savedKey)
     } else if (type.isDogeDingoWif) {
@@ -115,12 +115,12 @@ export function createAddresses(key: string) {
 }
 
 export function createBip32NodeFromTwelveWords(mnemonics: string, currency: string): hdkey {
-    const seed = Bip39.mnemonicToSeedSync(mnemonics);
+    const seed = mnemonicToSeedSync(mnemonics);
     // @ts-ignore
-    const hdNode = Bitcoin.HDNode.fromSeedBuffer(Buffer.from(seed, 'hex'));
+    const hdNode = HDNode.fromSeedBuffer(Buffer.from(seed, 'hex'));
 
     // const hdNode = hdkey.fromMasterSeed(seed);
-    console.log(hdNode.derivePath("m/84'/0'/0'/0/0"), hdNode.derivePath("m/44'/3'/0'/0/0"), "createBip32NodeFromTwelveWords")
+    // console.log(hdNode.derivePath("m/84'/0'/0'/0/0"), hdNode.derivePath("m/44'/3'/0'/0/0"), "createBip32NodeFromTwelveWords")
 
     if (currency === 'BTC') {
         return hdNode.derivePath("m/84'/0'/0'/0/0")
@@ -133,5 +133,5 @@ export function createAddressesFrom12Words(twelveWords) {
     const nodeBtc = createBip32NodeFromTwelveWords(twelveWords, 'BTC');
     const nodeDogeDingo = createBip32NodeFromTwelveWords(twelveWords, 'DOGE');
 
-    return createAddressResponse(getP2wpkhAddressFromPublicKey(nodeBtc.getWallet().getPublicKey()), toAddress(nodeDogeDingo.getWallet().getPrivateKey()));
+ return createAddressResponse(getP2wpkhAddressFromPublicKey(nodeBtc.publicKey), toAddress(nodeDogeDingo.privateKey));
 }

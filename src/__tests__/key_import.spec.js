@@ -1,4 +1,4 @@
-import { determineKeyType, createAddresses, prepareKeyForStorage } from "../key_import";
+import { determineKeyType, createAddresses, prepareKeyForStorage, createBip32NodeFromTwelveWords } from "../key_import";
 
 test('determine BTC wif', () => {
     const input = 'L5EZftvrYaSudiozVRzTqLcHLNDoVn7H5HSfM9BAN6tMJX8oTWz6';
@@ -63,12 +63,17 @@ test('test address creation from dingo wif', () => {
     expect(addresses.BTC).toBe('bc1qe98702jfazfqvgpmw06qw54s3cq9wayklut8ms');
 });
 
- test('test prepare key for storage', () => {
-     const input12Words = 'shield tip flower sorry judge yard dilemma sure sunset pudding remember rubber';
-     expect(prepareKeyForStorage(input12Words)).toBe(input12Words);
-     const inputPrivateKey = 'ad2413018f2f4afedc7765a9bff1801e5072b8c72748000bc4a1b503cbdb9dc0';
-     expect(prepareKeyForStorage(inputPrivateKey)).toBe(inputPrivateKey);
- });
+test('test prepare key for storage', () => {
+    const input12Words = 'shield tip flower sorry judge yard dilemma sure sunset pudding remember rubber';
+    expect(prepareKeyForStorage(input12Words)).toBe(input12Words);
+    const inputPrivateKey = 'ad2413018f2f4afedc7765a9bff1801e5072b8c72748000bc4a1b503cbdb9dc0';
+    expect(prepareKeyForStorage(inputPrivateKey)).toBe(inputPrivateKey);
+});
+
+test('test createBip32NodeFromTwelveWords', () => {
+    const result = createBip32NodeFromTwelveWords("shield tip flower sorry judge yard dilemma sure sunset pudding remember rubber", 'BTC')
+    console.log(result, "Response from the result")
+})
 
 
 /*test('test address creation from 12 words', () => {
