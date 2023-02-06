@@ -49,3 +49,8 @@ export function getPublicKeyFromPrivateKey(privateKey: Uint8Array): Buffer {
 export function toPublicKey (privKey:Uint8Array):Uint8Array {
     return secp256k1.publicKeyCreate(privKey);
 };
+
+
+export function nodeToPrivateKey(node){
+    return node.keyPair.d.toBuffer(32);
+}

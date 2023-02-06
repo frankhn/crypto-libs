@@ -1,10 +1,5 @@
-stages:
-  - test
-  - deploy
-
 test:
   image: node:latest
-  stage: test
   before_script:
     - echo -e "machine gitlab.com\nlogin gitlab-ci-token\npassword ${CI_JOB_TOKEN}" > ~/.netrc
   script:
@@ -17,7 +12,6 @@ test:
 
 deploy:
   image: node:latest
-  stage: deploy
   script:
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}">.npmrc
     - npm publish

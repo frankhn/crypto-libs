@@ -2,7 +2,7 @@ import { isWif, fromWif, toAddress } from "./dingo";
 import { isWif as isWifBtc, fromWif as fromBtcWif, getP2wpkhAddressFromPublicKey } from "./bitcoin";
 import { validateMnemonic, mnemonicToSeedSync } from "bip39";
 import { HDNode } from 'bitcoinjs3'
-import { getPublicKeyFromPrivateKey } from "./shared";
+import {getPublicKeyFromPrivateKey, nodeToPrivateKey} from "./shared";
 
 /**
  * Used for import of keys in flip, will try to determine which key type is imported. Will throw an error if unable to determine type of invalid input
@@ -63,14 +63,14 @@ export function getPrivateKeyFromSavedKey(savedKey: Buffer, currency: string): B
  * Based on input key, return key in the type expected to be saved on device (unencrypted)
  * @param key
  */
-export function prepareKeyForStorage(key) {
+export function prepareKeyForStorage(key):string {
     const type = determineKeyType(key);
 
     if (type.is12Words) {
         return key;
     } else {
         // called with single argument
-        return getPrivateKeyFromSavedKey(key, 'DINGO');
+        return getPrivateKeyFromSavedKey(key, 'DINGO').toString('hex');
     }
 }
 
@@ -123,19 +123,10 @@ export function createBip32NodeFromTwelveWords(mnemonics: string, currency: stri
     }
 };
 
-// export function createAddressesFrom12Words(twelveWords) {
-//     const nodeBtc = createBip32NodeFromTwelveWords(twelveWords, 'BTC');
-//     const nodeDogeDingo = createBip32NodeFromTwelveWords(twelveWords, 'DOGE');
-//     console.log({ ...nodeBtc.keyPair }.getPublicKeyBuffer(), nodeBtc.keyPair, nodeDogeDingo?.keyPair, "NODEBTC")
-
-//     return createAddressResponse(getP2wpkhAddressFromPublicKey(nodeBtc?.keyPair.publicKey), toAddress(nodeDogeDingo?.keyPair.privateKey));
-// }
-
 export function createAddressesFrom12Words(twelveWords) {
     const nodeBtc = createBip32NodeFromTwelveWords(twelveWords, 'BTC');
     const nodeDogeDingo = createBip32NodeFromTwelveWords(twelveWords, 'DOGE');
-
-    const dogeNodePrivateKey = nodeDogeDingo.keyPair.d.toBuffer(32);
+    const dogeNodePrivateKey = nodeToPrivateKey(nodeDogeDingo);
 
     return createAddressResponse(getP2wpkhAddressFromPublicKey(nodeBtc.keyPair.getPublicKeyBuffer()), toAddress(dogeNodePrivateKey));
 }
